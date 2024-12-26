@@ -8,6 +8,7 @@ import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.application.dto.LectureDTO;
 import org.lecture.lectureproject.application.dto.LectureListRequest;
 import org.lecture.lectureproject.domain.exception.LectureCapacityExceedException;
+import org.lecture.lectureproject.domain.exception.LectureDuplicateException;
 import org.lecture.lectureproject.domain.model.Lecture;
 import org.lecture.lectureproject.domain.model.LectureMng;
 import org.lecture.lectureproject.domain.repository.LectureMngRepository;
@@ -41,6 +42,12 @@ public class LectureService {
         //정원확인
         if (getCurrentCapacity >= 30) {
             throw new LectureCapacityExceedException();
+        }
+
+        // 동일 강의 중복 신청 방지
+        boolean duplicatedApplied = lectureMngRepository.existsByLectureIdAndUserId(request.getLectureId(), request.getUserId());
+        if (duplicatedApplied) {
+            throw new LectureDuplicateException();
         }
 
         LectureMng lectureMng = LectureMng.builder()

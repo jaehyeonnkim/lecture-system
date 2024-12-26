@@ -20,4 +20,6 @@ public interface LectureMngRepository extends JpaRepository<LectureMng, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT mng FROM LectureMng mng WHERE mng.lectureId = :lectureId")
     Optional<LectureMng> findByIdWithLock(long lectureId);
+
+    boolean existsByLectureIdAndUserId(long lectureId, long userId);
 }
