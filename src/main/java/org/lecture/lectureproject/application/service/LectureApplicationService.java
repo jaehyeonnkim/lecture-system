@@ -1,9 +1,8 @@
 package org.lecture.lectureproject.application.service;
 
 import org.lecture.lectureproject.application.dto.LectureApplyRequest;
-import org.lecture.lectureproject.application.dto.LectureDTO;
+import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.application.dto.LectureListRequest;
-import org.lecture.lectureproject.domain.model.Lecture;
 import org.lecture.lectureproject.domain.service.LectureService;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,8 @@ public class LectureApplicationService {
         this.domainService = domainService;
     }
 
-    public void applyLecture(LectureApplyRequest request) {
-        domainService.applyLecture(request.getLectureId(), request.getUserId());
+    public LectureApplyResponse applyLecture(LectureApplyRequest request) {
+        return domainService.applyLecture(request);
     }
 
     public List<Object[]>  selectLecture(LectureListRequest request) {

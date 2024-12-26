@@ -1,5 +1,6 @@
 package org.lecture.lectureproject.domain.repository;
 
+import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.domain.model.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,4 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
             "GROUP BY lec.id, lec.capacity " +
             "HAVING COUNT(mng.lectureId) < lec.capacity")
     List<Object[]> findByDateRange(Date startDate, Date endDate);
-
-
 }

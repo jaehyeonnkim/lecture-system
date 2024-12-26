@@ -6,6 +6,13 @@ spring:
   datasource:
     hikari:
       driver-class-name: org.h2.Driver
-      jdbc-url: jdbc:h2:~/test
+      jdbc-url: jdbc:h2:~/test;MODE=MySQL;AUTO_SERVER=TRUE;
       username: test
       password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

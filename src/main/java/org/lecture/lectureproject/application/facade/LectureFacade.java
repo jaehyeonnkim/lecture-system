@@ -2,6 +2,7 @@ package org.lecture.lectureproject.application.facade;
 
 
 import org.lecture.lectureproject.application.dto.LectureApplyRequest;
+import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.application.dto.LectureDTO;
 import org.lecture.lectureproject.application.dto.LectureListRequest;
 import org.lecture.lectureproject.application.service.LectureApplicationService;
@@ -21,10 +22,12 @@ public class LectureFacade {
         this.applicationService = applicationService;
     }
 
-    public void applyLecture(LectureApplyRequest request) {
-        applicationService.applyLecture(request);
+    //강의 신청
+    public LectureApplyResponse applyLecture(LectureApplyRequest request) {
+        return applicationService.applyLecture(request);
     }
 
+    //강의 조회
     public List<Object[]>  selectLecture(LectureListRequest request) {
         return applicationService.selectLecture(request);
     }

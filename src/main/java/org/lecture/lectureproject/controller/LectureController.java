@@ -1,7 +1,9 @@
 package org.lecture.lectureproject.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.lecture.lectureproject.application.dto.LectureApplyRequest;
+import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.application.dto.LectureDTO;
 import org.lecture.lectureproject.application.dto.LectureListRequest;
 import org.lecture.lectureproject.application.facade.LectureFacade;
@@ -10,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class LectureController {
@@ -22,20 +24,22 @@ public class LectureController {
 
     //강의 조회
     @PostMapping("/lectures")
-    public List<Object[]>  selectLecture (@RequestBody(required = false) LectureListRequest requestDto){
-        List<Object[]> lecture = lectureFacade.selectLecture(requestDto);
+    public List<Object[]>  selectLecture (@RequestBody(required = false) LectureListRequest request){
+        List<Object[]> lecture = lectureFacade.selectLecture(request);
         ResponseEntity.ok("강의가 성공적으로 조회되었습니다.");
         return lecture;
     }
 
-    @PostMapping("/{lectureId}/apply")
-    public ResponseEntity<String> applyLecture(@PathVariable Long lectureId, @RequestBody LectureApplyRequest request) {
+    @PostMapping("/apply")
+    public LectureApplyResponse applyLecture(@RequestBody LectureApplyRequest request) {
 
-        request.setLectureId(lectureId); // URL의 lectureId를 설정
         lectureFacade.applyLecture(request);
-        return ResponseEntity.ok("강의가 성공적으로 신청되었습니다.");
-    }
 
+        return LectureApplyResponse.builder()
+                .message("성공적으로 신청되었습니다.")
+                .code("00")
+                .build();
+    }
 
 }
 

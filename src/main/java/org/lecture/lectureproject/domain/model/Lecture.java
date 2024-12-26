@@ -2,6 +2,7 @@ package org.lecture.lectureproject.domain.model;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalTime;
@@ -121,4 +122,6 @@ public class Lecture {
     public void setUpdtDate(Date updtDate) {
         this.updtDate = updtDate;
     }
+
+
 }
