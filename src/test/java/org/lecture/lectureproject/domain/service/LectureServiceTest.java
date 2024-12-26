@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.lecture.lectureproject.application.dto.LectureApplyRequest;
 import org.lecture.lectureproject.domain.exception.LectureCapacityExceedException;
+import org.lecture.lectureproject.domain.exception.LectureDuplicateException;
 import org.lecture.lectureproject.domain.model.Lecture;
 import org.lecture.lectureproject.domain.model.LectureMng;
 import org.lecture.lectureproject.domain.repository.LectureMngRepository;
@@ -59,6 +60,7 @@ public class LectureServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("40명이 동시에 신청했을 때 30명만 성공")
     void 특강_동시성테스트_40명신청시_30명성공() throws InterruptedException {
         long userId = 1L;
@@ -106,4 +108,70 @@ public class LectureServiceTest {
     }
 
 
+    @Test
+    @DisplayName("동일사용자가 같은강의 신청 시 신청 실패")
+    void 특강_신청_실패_동일강의() {
+        // Given
+        Long userId = 1L;
+        Long lectureId = 1L;
+        LectureApplyRequest firstRequest = new LectureApplyRequest(userId, lectureId);
+        LectureApplyRequest duplicateRequest = new LectureApplyRequest(userId, lectureId);
+
+        // 첫 번째 신청
+        lectureService.applyLecture(firstRequest);
+
+        // When & Then
+        assertThatThrownBy(() -> lectureService.applyLecture(duplicateRequest))
+                .isInstanceOf(LectureDuplicateException.class);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("동일사용자의 5번 중복신청시 1번만 성공")
+    void 특강_신청_5번신청시_1번성공() throws InterruptedException {
+        // Given
+        Long userId = 1L;
+        Long lectureId = 1L;
+        int tryedApply = 5; // 동일 유저가 5번 신청
+        int exptectedApply = 1;
+
+        // 동시성을 위해 스레드 풀 설정
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        CountDownLatch latch = new CountDownLatch(tryedApply); // 동시성 제어
+
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < tryedApply; i++) {
+            Future<Boolean> result = executorService.submit(() -> {
+                try {
+                    lectureService.applyLecture(new LectureApplyRequest(userId, lectureId));
+                    return true; // 신청 성공
+                } catch (LectureDuplicateException e) {
+                    return false; // 중복 신청으로 실패
+                } finally {
+                    latch.countDown();
+                }
+            });
+            results.add(result);
+        }
+
+        latch.await();
+        executorService.shutdown();
+
+        // 신청 결과
+        long successfulApplications = results.stream()
+                .filter(Future::isDone)
+                .map(result -> {
+                    try {
+                        return result.get(); // 결과 확인
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .filter(success -> success)
+                .count();
+
+        // Then
+        assertThat(successfulApplications).isEqualTo(exptectedApply);
+    }
 }
