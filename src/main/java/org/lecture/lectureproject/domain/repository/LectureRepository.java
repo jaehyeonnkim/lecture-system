@@ -21,4 +21,11 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
             "GROUP BY lec.id, lec.capacity " +
             "HAVING COUNT(mng.lectureId) < lec.capacity")
     List<Object[]> findByDateRange(Date startDate, Date endDate);
+
+    @Query("SELECT mng.id, lec.id, u.name " +
+            "FROM LectureMng mng " +
+            "LEFT JOIN User u ON mng.userId = u.id " +
+            "LEFT JOIN Lecture lec ON lec.id = mng.lectureId " +
+            "WHERE mng.userId = :userId")
+    List<Object[]> findByUserId(long userId);
 }

@@ -1,13 +1,9 @@
 package org.lecture.lectureproject.application.facade;
 
 
-import org.lecture.lectureproject.application.dto.LectureApplyRequest;
-import org.lecture.lectureproject.application.dto.LectureApplyResponse;
-import org.lecture.lectureproject.application.dto.LectureDTO;
-import org.lecture.lectureproject.application.dto.LectureListRequest;
+import org.lecture.lectureproject.application.dto.*;
 import org.lecture.lectureproject.application.service.LectureApplicationService;
 import lombok.extern.slf4j.Slf4j;
-import org.lecture.lectureproject.domain.model.Lecture;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +26,11 @@ public class LectureFacade {
     //강의 조회
     public List<Object[]>  selectLecture(LectureListRequest request) {
         return applicationService.selectLecture(request);
+    }
+
+    //신청한 강의 조회
+    public List<Object[]>  selectApplyLecture(LectureApplyListRequest request) {
+        return applicationService.selectApplyLecture(request);
     }
 
 }

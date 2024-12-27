@@ -3,10 +3,7 @@ package org.lecture.lectureproject.domain.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lecture.lectureproject.application.dto.LectureApplyRequest;
-import org.lecture.lectureproject.application.dto.LectureApplyResponse;
-import org.lecture.lectureproject.application.dto.LectureDTO;
-import org.lecture.lectureproject.application.dto.LectureListRequest;
+import org.lecture.lectureproject.application.dto.*;
 import org.lecture.lectureproject.domain.exception.LectureCapacityExceedException;
 import org.lecture.lectureproject.domain.exception.LectureDuplicateException;
 import org.lecture.lectureproject.domain.model.Lecture;
@@ -72,7 +69,11 @@ public class LectureService {
         return lectureRepository.findByDateRange(request.getStartDate(), request.getEndDate());
     }
 
-
-
-
+    //신청한 강의 조회
+    public List<Object[]> selectApplyLecture(LectureApplyListRequest request) {
+        if(request==null){
+            request = new LectureApplyListRequest();
+        }
+        return lectureRepository.findByUserId(request.getUserId());
+    }
 }

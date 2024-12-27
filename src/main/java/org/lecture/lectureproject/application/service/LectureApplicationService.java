@@ -1,5 +1,6 @@
 package org.lecture.lectureproject.application.service;
 
+import org.lecture.lectureproject.application.dto.LectureApplyListRequest;
 import org.lecture.lectureproject.application.dto.LectureApplyRequest;
 import org.lecture.lectureproject.application.dto.LectureApplyResponse;
 import org.lecture.lectureproject.application.dto.LectureListRequest;
@@ -22,5 +23,9 @@ public class LectureApplicationService {
 
     public List<Object[]>  selectLecture(LectureListRequest request) {
         return domainService.selectLecture(request);
+    }
+
+    public List<Object[]> selectApplyLecture(LectureApplyListRequest request) {
+        return domainService.selectApplyLecture(request);
     }
 }

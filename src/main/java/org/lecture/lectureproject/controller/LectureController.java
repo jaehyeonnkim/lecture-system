@@ -2,10 +2,7 @@ package org.lecture.lectureproject.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.lecture.lectureproject.application.dto.LectureApplyRequest;
-import org.lecture.lectureproject.application.dto.LectureApplyResponse;
-import org.lecture.lectureproject.application.dto.LectureDTO;
-import org.lecture.lectureproject.application.dto.LectureListRequest;
+import org.lecture.lectureproject.application.dto.*;
 import org.lecture.lectureproject.application.facade.LectureFacade;
 import org.lecture.lectureproject.domain.model.Lecture;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +27,7 @@ public class LectureController {
         return lecture;
     }
 
+    //강의신청
     @PostMapping("/apply")
     public LectureApplyResponse applyLecture(@RequestBody LectureApplyRequest request) {
 
@@ -39,6 +37,13 @@ public class LectureController {
                 .message("성공적으로 신청되었습니다.")
                 .code("00")
                 .build();
+    }
+
+    //신청한 강의 조회
+    @PostMapping("/lectures/{userId}")
+    public List<Object[]>  selectApplyLecture (@RequestBody LectureApplyListRequest request){
+        List<Object[]> lecture = lectureFacade.selectApplyLecture(request);
+        return lecture;
     }
 
 }
